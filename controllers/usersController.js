@@ -45,12 +45,37 @@ export const postUser =  async (req, res) => {
 
 
 export const putUser = async (req, res) => {
-    const {id}
+    const { id } = req.params; //get user id from params
+    const { first_name, last_name, age, active } = req.body;
+
     try {
-        const = await ;
-        res.status(201)
+        const result = await pool.query(`UPDATE users SET first_name =$1, last_name = $2, age = $3, active = $4 WHERE id = $5 RETURNING *`, [first_name, last_name, age, active, id]);
+        if (result.rows.length === 0) {
+            res.status(404).json({ message: `User ${id} not found`});
+        } else {
+            // if row was indeed updated 
+            res.json(result.rows[0]);
+        }
     } catch (error) {
         console.error(error);
         res.sendStatus(418);
+    }
+}
+
+export const deleteUser = async (req, res) => {
+    const { id } = req.params; 
+
+    try {
+        const result = await pool.query(`DELETE FROM users WHERE id = $1 RETURNING *`, [id]);
+        if (result.rows.length === 0)
+        {
+            res.status(404).json({ message: `User ${id} not found` });
+        } else {
+            //if a row was deleted, return the deleted user
+            res.json(result.rows[0]);
+        }
+    } catch (error) {
+        console.log('Error deleting user', error);
+        res.sendStatus(500);
     }
 }
