@@ -27,3 +27,30 @@ export const getUser = async (req, res) => {
         res.sendStatus(500);
     }
 };
+
+export const postUser =  async (req, res) => {
+    //first we export the propertied from the body
+    const {first_name, last_name, age, active} = req.body;
+
+    //try statement will attempt to execute code inside
+    try {
+        //query to insert new user
+        const result = await pool.query(`INSERT INTO users (first_name, last_name, age, active) VALUES ($1, $2, $3, $4) RETURNING *`, [first_name, last_name, age, active]);
+        res.status(201).json(result.rows[0]);
+    } catch (error) {
+        console.error("Error inserting new user", error); 
+        res.sendStatus(500);
+    }
+}
+
+
+export const putUser = async (req, res) => {
+    const {id}
+    try {
+        const = await ;
+        res.status(201)
+    } catch (error) {
+        console.error(error);
+        res.sendStatus(418);
+    }
+}

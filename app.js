@@ -6,6 +6,9 @@ dotenv.config();
 const app = express();
 const port = 8000;
 
+
+//make sure to use this midddleware to parse json bodies
+app.use(express.json());
 app.use('/users', usersRouter);
 
 
@@ -13,6 +16,11 @@ app.use('/users', usersRouter);
 app.get('/', (req, res) => {
     res.send('hello world')
 });
+
+    // app.all('/secret', (req, res, next) => {
+    //     console.log('Accessing the secret section ...')
+    //     next() // pass control to the next handler
+    //   })
 
 
 
