@@ -1,6 +1,7 @@
 import express from 'express';
 import dotenv from 'dotenv';
 import usersRouter from './routes/usersRouter.js';
+import ordersRouter from './routes/ordersRouter.js';
 
 dotenv.config();
 const app = express();
@@ -10,6 +11,7 @@ const port = 8000;
 //make sure to use this midddleware to parse json bodies
 app.use(express.json());
 app.use('/users', usersRouter);
+app.use('/orders', ordersRouter);
 
 
 //create instance of express and where function is invoked
