@@ -60,7 +60,7 @@ export const putUser = async (req, res) => {
         }
     } catch (error) {
         console.error(error);
-        res.sendStatus(418);
+        res.sendStatus(500);
     }
 }
 
