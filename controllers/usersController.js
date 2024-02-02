@@ -95,3 +95,50 @@ export const deleteUser = async (req, res) => {
         res.sendStatus(500);
     }
 }
+
+
+//implementing function to get orders linked to a specific user
+
+export const getUserOrders = async (res, req) => {
+    const errors = validationResult(req);
+    if(!errors.isEmpty()) {
+        return res.status(400).json({ errors: errors.array() });
+    }
+
+
+    //get user_id from params
+    const { id } = req.params;
+
+    try {
+        const result = await pool.query('SELECT * FROM orders WHERE user_1 = $1', [id]);
+            if(result.rows.length === 0) {
+                res.status(404).json({ message: `no oders found for this user ${id}`});
+            } else {
+                res.json(result.rows);
+            }
+        }catch (error) {
+            console.error("Error retrieving user oders", error);
+            res.sendStatus(500);
+        }
+};
+
+//function that sets user as inactive if they never order
+export const setUserInactive = async (req, res) => {
+    //get user id from params
+    const { id } = req.params;
+
+    try {
+        const result = await pool.query(`SELECT * FROM orders WHERE user_id = $1`, [id]);
+
+        //if use has no orders
+        if(result.rows.length === 0) {
+            //set the user as inactive
+            await pool.query(`UPDATE users SET active = false WHERE id = $1`, [id]);
+            res.json({ message: `user ${id} inactive because they have no orders`});
+        } else {
+            res.json({ message: `user ${id} has orders and remains active`});
+        }
+    } catch (error) {
+        res.status(500).json({ error: 'Error updating user active status' });
+    }
+};
