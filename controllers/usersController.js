@@ -1,3 +1,4 @@
+import { check, validationResult } from 'express-validator';
 import { pool } from "../db/pool.js";
 
 export const getUsers = async (req, res) => {
@@ -31,6 +32,14 @@ export const getUser = async (req, res) => {
 };
 
 export const postUser =  async (req, res) => {
+    //validate before logic of the function
+    const errors = validationResult(req);
+    console.log(errors.array());
+    if(!errors.isEmpty()) {
+        return res.status(400).json({ errors: errors.array() });
+    };
+
+
     //first we export the propertied from the body
     const {first_name, last_name, age, active} = req.body;
 
@@ -47,6 +56,11 @@ export const postUser =  async (req, res) => {
 
 
 export const putUser = async (req, res) => {
+    //validate before logic of function
+    const errors = validationResult(req);
+    if(!errors.isEmpty()) {
+        return res.status(400).json({ errors: errors.array() });
+    }
     const { id } = req.params; //get user id from params
     const { first_name, last_name, age, active } = req.body;
 

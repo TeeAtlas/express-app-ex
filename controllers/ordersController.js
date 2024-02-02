@@ -46,8 +46,8 @@ export const postOrder = async (req, res) => {
         const result = await pool.query(`INSERT INTO orders (price, date, user_id) VALUES ($1, $2, $3) RETURNING *`, [price, date, user_id]);
         res.status(201).json(result.rows[0]); //send the created order back to the client
     } catch (error) {
-        console.error(error)
-        res.status(500).json({ message: 'an error occured while handling order'});
+        console.error("Error inserting new order", error);
+        res.sendStatus(500);
     }
 
 };
